@@ -42,9 +42,9 @@ app.use(limiter);
 // CORS configuration - strict for security
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://yourdomain.com'] // Replace with your actual domain
+    ? (process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['https://ghost-feedbacksystem-frontend.vercel.app'])
     : ['http://localhost:3000'],
-  credentials: false, // No cookies or credentials
+  credentials: true, 
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
