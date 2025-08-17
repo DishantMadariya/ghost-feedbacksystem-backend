@@ -1,0 +1,29 @@
+{
+  "name": "ghost-feedback-server",
+  "version": "1.0.0",
+  "description": "Backend server for Ghost Feedback System",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "seed": "node seeders/categorySeeder.js",
+    "cleanup-html": "node scripts/cleanupHtmlEntities.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.5.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "express-rate-limit": "^6.10.0",
+    "express-validator": "^7.0.1",
+    "dotenv": "^16.3.1",
+    "multer": "^1.4.5-lts.1",
+    "csv-writer": "^1.6.0",
+    "exceljs": "^4.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
