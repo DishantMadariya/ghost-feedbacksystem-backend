@@ -86,14 +86,54 @@ A secure, anonymous suggestion box system backend built with Node.js, Express.js
    # Start MongoDB (if local)
    mongod
    
-   # Run database seeder
+   # Run database seeder (automatic on startup)
    npm run seed
+   
+   # Force re-seeding (overwrites existing data)
+   npm run seed:force
+   
+   # Run only category seeder
+   npm run seed:categories
    ```
 
 5. **Start Development Server**
    ```bash
    npm run dev
    ```
+
+## 🌱 Database Seeding
+
+The system automatically seeds essential data (categories, subcategories) when it starts up. This ensures your application always has the necessary data structure.
+
+### **Automatic Seeding**
+- **On Startup**: Categories and subcategories are automatically seeded if the database is empty
+- **Smart Detection**: Only seeds when needed (won't overwrite existing data)
+- **Environment Control**: Set `AUTO_SEED_CATEGORIES=false` to disable automatic seeding
+
+### **Manual Seeding Options**
+```bash
+# Check if seeding is needed
+npm run seed
+
+# Force re-seeding (overwrites existing data)
+npm run seed:force
+
+# Run only category seeder
+npm run seed:categories
+```
+
+### **Manual Seeding**
+The system provides command-line tools for manual seeding when needed:
+
+### **Seeding Data**
+The system includes 7 main categories with 8 subcategories each:
+- Project & Development
+- Management & Leadership  
+- Team & Collaboration
+- Workplace Environment
+- Career & Learning
+- HR & Policy
+- Innovation & New Ideas
 
 ### **Production Deployment (Render)**
 

@@ -92,22 +92,46 @@ app.use((err, req, res, next) => {
 });
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/ghost-feedback-system', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://dishantpatel1446:ghostSuggestion@cluster0.aiyxwut.mongodb.net/ghost-suggestion', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
 .then(async () => {
+  console.log('🔌 Connected to MongoDB');
   
   // Create default admin user
   try {
     const Admin = require('./models/Admin');
     await Admin.createDefaultAdmin();
+    console.log('✅ Default admin user check completed');
   } catch (error) {
     console.error('⚠️  Could not create default admin:', error.message);
     console.warn('💡 This is usually not a critical error and the server will continue');
   }
   
-  // Start server after DB connection
+  // Seed categories and subcategories (if enabled)
+  if (process.env.AUTO_SEED_CATEGORIES !== 'false') {
+    try {
+      const { runAllSeeders, checkIfSeedingNeeded } = require('./seeders');
+      
+      // Check if seeding is needed
+      const needsSeeding = await checkIfSeedingNeeded();
+      
+      if (needsSeeding) {
+        console.log('🌱 Database appears empty, running seeders...');
+        await runAllSeeders();
+      } else {
+        console.log('✅ Database already contains data, skipping seeding');
+      }
+    } catch (error) {
+      console.error('⚠️  Could not run seeders:', error.message);
+      console.warn('💡 This is usually not a critical error and the server will continue');
+    }
+  } else {
+    console.log('⏭️  Auto-seeding disabled via environment variable');
+  }
+  
+  // Start server after DB connection and seeding
   app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
     console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);

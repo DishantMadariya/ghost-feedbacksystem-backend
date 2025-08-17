@@ -3,7 +3,7 @@ require('dotenv').config();
 
 // Set default environment variables if not present
 if (!process.env.MONGODB_URI) {
-  process.env.MONGODB_URI = 'mongodb://localhost:27017/ghost-feedback-system';
+  process.env.MONGODB_URI = 'mongodb+srv://dishantpatel1446:ghostSuggestion@cluster0.aiyxwut.mongodb.net/ghost-suggestion';
   console.log('🔧 Set default MongoDB URI:', process.env.MONGODB_URI);
 }
 

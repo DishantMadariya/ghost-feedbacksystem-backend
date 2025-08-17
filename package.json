@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "seed": "node seeders/categorySeeder.js",
+    "seed": "node scripts/seed.js",
+    "seed:force": "node scripts/seed.js --force",
+    "seed:categories": "node seeders/categorySeeder.js",
     "cleanup-html": "node scripts/cleanupHtmlEntities.js"
   },
   "dependencies": {

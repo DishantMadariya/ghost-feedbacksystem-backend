@@ -23,8 +23,10 @@
    # Edit .env with your MongoDB URI
    ```
 
-4. **Seed the database:**
+4. **Seed the database (optional - automatic on startup):**
    ```bash
+   # Automatic seeding happens when server starts
+   # Or manually run:
    npm run seed
    ```
 
@@ -74,4 +76,4 @@
 - Backend must be running before frontend can submit suggestions
 - Frontend proxies API calls to backend automatically
 - Each service runs independently - restart them separately as needed
-- Database seeding only needs to be done once
+- Database seeding happens automatically on startup (no manual action needed)
