@@ -492,9 +492,22 @@ router.put('/admins/:id',
       const { id } = req.params;
       const updateData = { ...req.body };
       
+      // Get the current admin data to check if role is actually being changed
+      const currentAdmin = await Admin.findById(id).select('role');
+      
+      if (!currentAdmin) {
+        return res.status(404).json({ error: 'Admin not found' });
+      }
+      
+      // Check if user is trying to update their own account
+      const isUpdatingSelf = req.admin._id.toString() === id;
+      
       // Don't allow updating own role to prevent privilege escalation
-      if (req.admin._id.toString() === id && updateData.role) {
-        return res.status(400).json({ error: 'You cannot change your own role' });
+      if (isUpdatingSelf && updateData.role && updateData.role !== currentAdmin.role) {
+        return res.status(400).json({ 
+          error: 'You cannot change your own role',
+          message: 'For security reasons, you cannot change your own role. Please contact another administrator if this change is necessary.'
+        });
       }
       
       // Remove password from update data if it's empty or not provided
