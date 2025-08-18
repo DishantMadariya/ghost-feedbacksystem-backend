@@ -61,8 +61,20 @@ const adminSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true,
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true }
+  toJSON: { 
+    virtuals: true,
+    transform: function(doc, ret) {
+      delete ret.password;
+      return ret;
+    }
+  },
+  toObject: { 
+    virtuals: true,
+    transform: function(doc, ret) {
+      delete ret.password;
+      return ret;
+    }
+  }
 });
 
 // Virtual for full name
@@ -154,6 +166,11 @@ adminSchema.methods.resetLoginAttempts = function() {
 // Static method to find by email
 adminSchema.statics.findByEmail = function(email) {
   return this.findOne({ email: email.toLowerCase() });
+};
+
+// Static method to find by email for login (includes password)
+adminSchema.statics.findByEmailForLogin = function(email) {
+  return this.findOne({ email: email.toLowerCase() }).select('+password');
 };
 
 // Static method to create default admin

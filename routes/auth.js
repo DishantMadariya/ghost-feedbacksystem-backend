@@ -9,8 +9,8 @@ router.post('/login', sanitizeInputs, validateAdminLogin, async (req, res) => {
   try {
     const { email, password } = req.body;
     
-    // Find admin by email
-    const admin = await Admin.findByEmail(email);
+    // Find admin by email (including password for authentication)
+    const admin = await Admin.findByEmailForLogin(email);
     
     if (!admin) {
       return res.status(401).json({ error: 'Invalid credentials' });
@@ -181,7 +181,7 @@ router.post('/change-password', sanitizeInputs, async (req, res) => {
     
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const admin = await Admin.findById(decoded.adminId);
+    const admin = await Admin.findById(decoded.adminId).select('+password');
     
     if (!admin) {
       return res.status(401).json({ error: 'Invalid token' });
