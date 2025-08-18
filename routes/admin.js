@@ -16,6 +16,7 @@ const {
   validateSuggestionUpdateBusinessLogic,
   validateExportParams, 
   validateAdminData,
+  validateAdminUpdate,
   sanitizeInputs 
 } = require('../middleware/validation');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
@@ -484,16 +485,21 @@ router.post('/admins',
 router.put('/admins/:id', 
   canManageAdmins,
   sanitizeInputs,
-  validateAdminData,
+  validateAdminUpdate,
   logAdminAction('Update admin'),
   async (req, res) => {
     try {
       const { id } = req.params;
-      const updateData = req.body;
+      const updateData = { ...req.body };
       
       // Don't allow updating own role to prevent privilege escalation
       if (req.admin._id.toString() === id && updateData.role) {
         return res.status(400).json({ error: 'You cannot change your own role' });
+      }
+      
+      // Remove password from update data if it's empty or not provided
+      if (!updateData.password || updateData.password.trim() === '') {
+        delete updateData.password;
       }
       
       const admin = await Admin.findByIdAndUpdate(

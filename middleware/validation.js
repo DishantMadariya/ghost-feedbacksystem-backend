@@ -62,11 +62,25 @@ const validateAdminData = [
     .withMessage('Please provide a valid email address'),
   
   body('password')
-    .optional()
-    .isLength({ min: 8 })
-    .withMessage('Password must be at least 8 characters long')
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)
-    .withMessage('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'),
+    .optional({ checkFalsy: true })
+    .custom((value) => {
+      // If password is not provided or is empty, skip validation
+      if (!value || value.trim() === '') {
+        return true;
+      }
+      
+      // If password is provided, validate it
+      if (value.length < 8) {
+        throw new Error('Password must be at least 8 characters long');
+      }
+      
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+      if (!passwordRegex.test(value)) {
+        throw new Error('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character');
+      }
+      
+      return true;
+    }),
   
   body('role')
     .trim()
@@ -88,6 +102,91 @@ const validateAdminData = [
     .withMessage('Last name can only contain letters and spaces'),
   
 
+  
+  body('permissions')
+    .optional()
+    .isObject()
+    .withMessage('Permissions must be an object'),
+  
+  body('permissions.viewAnalytics')
+    .optional()
+    .isBoolean()
+    .withMessage('viewAnalytics permission must be a boolean'),
+  
+  body('permissions.viewSuggestions')
+    .optional()
+    .isBoolean()
+    .withMessage('viewSuggestions permission must be a boolean'),
+  
+  body('permissions.manageSuggestions')
+    .optional()
+    .isBoolean()
+    .withMessage('manageSuggestions permission must be a boolean'),
+  
+  body('permissions.manageAdmins')
+    .optional()
+    .isBoolean()
+    .withMessage('manageAdmins permission must be a boolean'),
+  
+  body('permissions.exportData')
+    .optional()
+    .isBoolean()
+    .withMessage('exportData permission must be a boolean'),
+  
+  handleValidationErrors
+];
+
+// Validation rules for admin updates (without password validation)
+const validateAdminUpdate = [
+  body('email')
+    .optional()
+    .trim()
+    .isEmail()
+    .normalizeEmail()
+    .withMessage('Please provide a valid email address'),
+  
+  body('password')
+    .optional({ checkFalsy: true })
+    .custom((value) => {
+      // If password is not provided or is empty, skip validation
+      if (!value || value.trim() === '') {
+        return true;
+      }
+      
+      // If password is provided, validate it
+      if (value.length < 8) {
+        throw new Error('Password must be at least 8 characters long');
+      }
+      
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+      if (!passwordRegex.test(value)) {
+        throw new Error('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character');
+      }
+      
+      return true;
+    }),
+  
+  body('role')
+    .optional()
+    .trim()
+    .isIn(['HR', 'CEO', 'COO', 'CTO', 'CFO', 'CCO', 'CPO'])
+    .withMessage('Invalid role selected'),
+  
+  body('firstName')
+    .optional()
+    .trim()
+    .isLength({ min: 2, max: 50 })
+    .withMessage('First name must be between 2 and 50 characters')
+    .matches(/^[a-zA-Z\s]+$/)
+    .withMessage('First name can only contain letters and spaces'),
+  
+  body('lastName')
+    .optional()
+    .trim()
+    .isLength({ min: 2, max: 50 })
+    .withMessage('Last name must be between 2 and 50 characters')
+    .matches(/^[a-zA-Z\s]+$/)
+    .withMessage('Last name can only contain letters and spaces'),
   
   body('permissions')
     .optional()
@@ -298,6 +397,7 @@ module.exports = {
   validateSuggestionSubmission,
   validateAdminLogin,
   validateAdminData,
+  validateAdminUpdate,
   validateSuggestionUpdate,
   validateSuggestionUpdateBusinessLogic,
   validateExportParams,
