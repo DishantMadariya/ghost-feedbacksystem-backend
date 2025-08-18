@@ -42,8 +42,8 @@ app.use(limiter);
 // CORS configuration - strict for security
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? (process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['https://ghost-feedbacksystem-frontend.vercel.app'])
-    : ['http://localhost:3000'],
+    ? (process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['https://ghost-feedbacksystem-dishants-projects-dc9f226c.vercel.app', 'https://ghost-feedbacksystem.vercel.app'])
+    : (process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['http://localhost:3000', 'https://ghost-feedbacksystem.vercel.app', 'https://ghost-feedbacksystem-dishants-projects-dc9f226c.vercel.app']),
   credentials: true, 
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
