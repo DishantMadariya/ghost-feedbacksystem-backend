@@ -320,8 +320,8 @@ For backend API issues:
 ## 🔗 Links
 
 - **Frontend Repository**: [Ghost Feedback Frontend](https://github.com/your-username/ghost-feedback-frontend)
-- **Live Demo**: [Your Frontend URL]
-- **API Base**: [Your Backend URL]
+- **Live Demo**: https://ghost-feedbacksystem.vercel.app/
+- **API Base**: https://ghost-feedbacksystem-backend.onrender.com
 
 ---
 
